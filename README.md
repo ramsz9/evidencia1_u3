@@ -18,7 +18,13 @@ keytool -genkeypair -alias evidencia1 -keyalg RSA -keysize 2048 -storetype PKCS1
   -dname "CN=localhost" -ext "SAN=dns:localhost,ip:127.0.0.1" -storepass <PASSWORD>
 ```
 
-2. Copiar la plantilla y poner la contraseña del keystore y un secreto JWT:
+2. Crear la base de datos en PostgreSQL (la tabla `student` la crea JPA al arrancar):
+
+```bash
+createdb -h localhost -U postgres evidencia1
+```
+
+3. Copiar la plantilla y poner la contraseña del keystore, un secreto JWT y la contraseña de PostgreSQL:
 
 ```bash
 cp src/main/resources/application-dev.properties.example src/main/resources/application-dev.properties
@@ -27,7 +33,7 @@ head -c 32 /dev/urandom | base64    # genera un valor para jwt.secret
 
 El keystore y `application-dev.properties` están en `.gitignore`: no se suben.
 
-3. Ejecutar:
+4. Ejecutar:
 
 ```bash
 ./run.sh
@@ -42,6 +48,21 @@ La API queda en `https://localhost:8443`.
 | POST | `/api/auth/login` | Público. Devuelve el token JWT |
 | GET | `/api/profile` | Cualquier usuario autenticado |
 | GET | `/api/admin` | Solo rol `ADMIN` |
+| GET | `/student` | Autenticado. Lista los estudiantes |
+| POST | `/student` | Autenticado. Registra un estudiante (valida email y nombre) |
+
+Cuerpo de `POST /student`:
+
+```json
+{
+  "name": "Ana",
+  "lastName": "López",
+  "phone": "6141234567",
+  "eMail": "ana@mail.com"
+}
+```
+
+Respuestas: `200` `{"message":"Student added","id":1}`; `400` `{"message":"El email no tiene un formato válido","httpStatus":"400 BAD_REQUEST"}`.
 
 Usuarios de prueba (en memoria): `user` / `user123` (USER) y `admin` / `admin123` (USER, ADMIN).
 
