@@ -24,4 +24,12 @@ public class ExceptionHandler {
         return new ResponseEntity<>(errorMessageDto, HttpStatus.UNAUTHORIZED);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(BusinessException.class)
+    public ResponseEntity<?> businessExceptionHandler(BusinessException businessException) {
+        ErrorMessageDto errorMessageDto = new ErrorMessageDto(
+                businessException.getMessage(),
+                HttpStatus.BAD_REQUEST.toString());
+        return new ResponseEntity<>(errorMessageDto, HttpStatus.BAD_REQUEST);
+    }
+
 }
