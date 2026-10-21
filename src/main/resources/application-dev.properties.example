@@ -1,2 +1,4 @@
 server.ssl.key-store-password=TU_PASSWORD_DEL_KEYSTORE
 jwt.secret=TU_SECRETO_BASE64_DE_32_BYTES_O_MAS
+spring.datasource.username=postgres
+spring.datasource.password=TU_PASSWORD_DE_POSTGRES
