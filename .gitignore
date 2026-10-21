@@ -1,0 +1,10 @@
+# Compilados de Maven
+**/target/
+
+# Credenciales y keystore locales (nunca se suben)
+**/src/main/resources/application-dev.properties
+**/src/main/resources/*.p12
+
+# Editores
+.vscode/
+.idea/
