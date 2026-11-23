@@ -106,3 +106,25 @@ Los 401, 403, logins fallidos y handshakes TLS rechazados se registran en el log
 WARN  c.e.exception.SecurityErrorHandler : 403 en GET /api/admin: Access Denied
 DEBUG o.a.t.util.net.NioEndpoint.handshake : Handshake failed ... (protocol_version) Client requested protocol TLSv1.1 is not enabled
 ```
+
+## Despliegue con Docker
+
+Tres contenedores definidos en `docker-compose.yaml`:
+
+| Servicio | Imagen | Red | Puertos publicados |
+|---|---|---|---|
+| `caddy` | `caddy:2-alpine` | frontend | 80 y 443 |
+| `app` | se construye con el `Dockerfile` | frontend y backend | ninguno (8080 interno) |
+| `postgres` | `postgres:17-alpine` | backend | ninguno (5432 interno) |
+
+Caddy termina el TLS con un certificado de Let's Encrypt para `DOMAIN` y reenvía las peticiones a `app:8080`.
+Los datos de PostgreSQL y los certificados se guardan en volúmenes (`pgdata`, `caddy_data`).
+
+```bash
+cp .env.example .env    # poner DOMAIN, HOST_IP, POSTGRES_PASSWORD y JWT_SECRET
+docker compose up -d --build
+docker compose ps
+```
+
+En local (`DOMAIN=localhost`) Caddy usa un certificado de su propia CA y los puertos quedan en `127.0.0.1`.
+En el servidor, `DOMAIN` es el nombre DNS público de la VM y `HOST_IP=0.0.0.0`.

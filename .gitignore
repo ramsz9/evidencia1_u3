@@ -8,3 +8,6 @@
 # Editores
 .vscode/
 .idea/
+
+# Variables del despliegue con Docker (contraseñas y secreto JWT)
+.env
